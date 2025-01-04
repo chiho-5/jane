@@ -4,3 +4,6 @@ bs4
 fastapi
 python-multipart
 tensorflow-cpu
+langchain-text-splitters
+pysqlite3-binary
+langchain_huggingface
