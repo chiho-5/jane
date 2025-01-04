@@ -24,6 +24,11 @@ def compute_file_hash(file_path: str) -> str:
             hasher.update(chunk)
     return hasher.hexdigest()
 
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello, Render!"}
+
 @app.post("/execute/")
 async def execute_query(
     mode: int = Form(...),
@@ -86,6 +91,10 @@ async def execute_query(
 
 
 
+if __name__ == "__main__":
+    # Get the port from the environment variable
+    port = int(os.environ.get("PORT", 8000))  # Default to 8000 if PORT is not set
+    uvicorn.run(app, host="0.0.0.0", port=port)
 
 # @app.post("/execute/")
 # async def execute_query(
