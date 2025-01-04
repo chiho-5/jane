@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 # API endpoint
-API_URL = "http://127.0.0.1:8000/execute/"
+API_URL = "https://jane-ef36.onrender.com/execute/"
 
 # Page title
 st.title("SpaceAI Interface")
