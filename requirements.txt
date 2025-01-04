@@ -2,3 +2,5 @@ embedchain
 huggingface_hub
 bs4
 fastapi
+python-multipart
+tensorflow-cpu
