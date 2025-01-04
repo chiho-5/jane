@@ -21,9 +21,9 @@ class SpaceAI:
             "top_p": 0.9,
             "stream": True,
             "prompt": (
-                "Use the following pieces of context to answer the query at the end.\n"
+                "you are a smart helpful student assistat who always gives detailed responses,Use the following pieces of context to answer the query at the end.\n"
                 "If you don't know the answer, just say that you don't know, don't try to make up an answer.\n"
-                "$context\n\nQuery: $query\n\nHelpful Answer:"
+                "$context\n\nQuery: $query\n\nAnswer:"
             ),
             "model_kwargs": {"response_format": {"type": "json_object"}}
         }
