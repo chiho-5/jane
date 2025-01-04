@@ -1,0 +1,4 @@
+embedchain
+huggingface_hub
+bs4
+fastapi
