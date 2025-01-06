@@ -1,5 +1,4 @@
-torch==2.5.0 --index-url https://download.pytorch.org/whl/cpu 
-sentence-transformers
+torch --index-url https://download.pytorch.org/whl/cpu sentence-transformers
 uvicorn
 llama-index-embeddings-huggingface
 llama-index
