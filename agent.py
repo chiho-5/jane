@@ -58,11 +58,26 @@ class SpaceAI:
             return response.response, urls
 
 
+    # async def save_uploaded_file(self, uploaded_file):
+    #     """Save the uploaded file temporarily or permanently."""
+    #     file_path = os.path.join(self.data_directory, uploaded_file.filename)
+    #     with open(file_path, "wb") as f:
+    #         f.write(uploaded_file.file.read())
+    #     return file_path
+
     async def save_uploaded_file(self, uploaded_file):
         """Save the uploaded file temporarily or permanently."""
+        # Ensure the directory exists
+        if not os.path.exists(self.data_directory):
+            os.makedirs(self.data_directory)
+    
+        # Construct the file path
         file_path = os.path.join(self.data_directory, uploaded_file.filename)
+    
+        # Write the uploaded file content to the file path
         with open(file_path, "wb") as f:
             f.write(uploaded_file.file.read())
+    
         return file_path
 
     async def reset_chat_memory():
