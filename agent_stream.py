@@ -79,7 +79,7 @@ import streamlit as st
 import requests
 
 # Base URL of the FastAPI application
-API_BASE_URL = "http://localhost:8000"
+API_BASE_URL = "https://jane-ef36.onrender.com"
 
 # Streamlit app title
 st.title("SpaceAI Client")
