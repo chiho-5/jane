@@ -1,5 +1,5 @@
 fastapi
-huggingface_hub
+torch==2.5.0 --index-url https://download.pytorch.org/whl/cpu
 llama-index-embeddings-huggingface
 llama-index
 llama-index-llms-huggingface
