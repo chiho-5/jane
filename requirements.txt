@@ -1,9 +1,8 @@
-embedchain
-huggingface_hub
-bs4
 fastapi
-python-multipart
-tensorflow-cpu
-langchain-text-splitters
-pysqlite3-binary
-langchain_huggingface
+huggingface_hub
+llama-index-embeddings-huggingface
+llama-index
+llama-index-llms-huggingface
+llama-index-llms-huggingface-api
+llama-index-readers-web
+llama-index-core
