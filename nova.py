@@ -16,13 +16,6 @@ import os
 
 
 class SpaceAI:
-    global_content = {}  # Globally persistent content
-    global_content_directory = "./global_data"  # Directory for global content
-    global_content_timer = None  # Timer to clear global content
-    web_search_limit = 3  # Max web searches per user
-    user_web_search_count = {}  # Tracks web searches by user ID
-    local_content_clear_interval = 3600  # Time in seconds to clear global content (e.g., 1 hour)
-
     def __init__(self, data_directory, query, user_id, include_web=False, llm_model="mistralai/Mistral-7B-Instruct-v0.3"):
         self.data_directory = data_directory
         self.query = query
@@ -33,6 +26,11 @@ class SpaceAI:
         self.memory = ChatMemoryBuffer.from_defaults(token_limit=3900)
         self.user_sessions = {}
         self.web_search = WebSearchFeature()
+        self.global_content = {}  # Globally persistent content
+        self.global_content_directory = "./global_data"  # Directory for global content  # Timer to clear global content
+        self.web_search_limit = 3  # Max web searches per user
+        self.user_web_search_count = {}  # Tracks web searches by user ID
+
 
         self.llm = HuggingFaceInferenceAPI(
             model_name=self.llm_model,
@@ -98,6 +96,7 @@ class SpaceAI:
 
 
     def _is_global_context_relevant(self):
+        self.set_global_content()
         """Check if the query relates to the global context."""
         if not self.global_content or not self.query:
             return False
@@ -121,6 +120,20 @@ class SpaceAI:
 
         return False
 
+    def _normalize_text(self, text):
+        """Normalize the text by lowering case and removing punctuation."""
+        text = text.lower()
+        text = re.sub(r'[^\w\s]', '', text)  # Remove punctuation
+        return text
+
+    def _has_keywords_in_content(self, query, content):
+        """Check if the query contains keywords that are present in the global content."""
+        # Split query into keywords (you can refine this logic)
+        query_keywords = query.split()
+        for keyword in query_keywords:
+            if keyword in content:
+                return True
+        return False
 
     async def setup_global_content_mode(self):
         """Set up retrieval mode for global content."""
@@ -168,10 +181,10 @@ class SpaceAI:
         index = VectorStoreIndex.from_documents(documents)
         return index.as_retriever()
 
-    @classmethod
-    def set_global_content(cls, content):
+    
+    def set_global_content(self):
         """Set globally persistent content."""
-        cls.global_content = {
+        self.global_content = global_content = {
             "overview": """
                 FUTO Space: A social media platform for students at the Federal University of Technology Owerri (FUTO).
                 Purpose: Provides a digital space for students to interact, share content, explore trending topics, and access university resources.
