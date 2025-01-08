@@ -13,7 +13,7 @@ from huggingface_hub import InferenceClient
 from llama_index.readers.web import SimpleWebPageReader
 from llama_index.core import ServiceContext,set_global_service_context
 import os
-
+import re
 
 class SpaceAI:
     def __init__(self, data_directory, query, user_id, include_web=False, llm_model="mistralai/Mistral-7B-Instruct-v0.3"):
