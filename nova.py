@@ -108,10 +108,19 @@ class SpaceAI:
         # Check if query matches any part of the global content
         for section, content in self.global_content.items():
             normalized_content = self._normalize_text(content)
+            
+            # Check if normalized query is a substring of normalized content
             if normalized_query in normalized_content:
                 return True
 
+            # Optional: If you want to check for keyword or phrase matches, add further logic
+            # Example: split the query into keywords and check if each exists in the content
+            query_keywords = normalized_query.split()
+            if all(keyword in normalized_content for keyword in query_keywords):
+                return True
+
         return False
+
 
     async def setup_global_content_mode(self):
         """Set up retrieval mode for global content."""
