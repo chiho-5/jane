@@ -16,7 +16,7 @@ import os
 
 
 class SpaceAI:
-    global_content = None  # Globally persistent content
+    global_content = {}  # Globally persistent content
     global_content_directory = "./global_data"  # Directory for global content
     global_content_timer = None  # Timer to clear global content
     web_search_limit = 3  # Max web searches per user
@@ -99,7 +99,19 @@ class SpaceAI:
 
     def _is_global_context_relevant(self):
         """Check if the query relates to the global context."""
-        return self.global_content and self.query.lower() in self.global_content.lower()
+        if not self.global_content or not self.query:
+            return False
+
+        # Normalize both global content and query for case insensitivity and punctuation
+        normalized_query = self._normalize_text(self.query)
+
+        # Check if query matches any part of the global content
+        for section, content in self.global_content.items():
+            normalized_content = self._normalize_text(content)
+            if normalized_query in normalized_content:
+                return True
+
+        return False
 
     async def setup_global_content_mode(self):
         """Set up retrieval mode for global content."""
@@ -150,32 +162,33 @@ class SpaceAI:
     @classmethod
     def set_global_content(cls, content):
         """Set globally persistent content."""
-        cls.global_content = """
-    FUTO Space: A social media platform for students at the Federal University of Technology Owerri (FUTO).
-    
-    Purpose: Provides a digital space for students to interact, share content, explore trending topics, and access university resources.
-    
-    Key Features:
-    - User Dashboard: Personalized view showing posts, friend activity, and notifications.
-    - Posts and Feeds: Share updates, photos, videos, and academic-related content.
-    - Friends: View your friends and recommended students in the community.
-    - Campus Tour Guide: Get directions and explore the FUTO campus.
-    - Marketplace: Buy, sell, and trade items like books, gadgets, and services.
-    - Chat System: Real-time messaging with friends and classmates.
-    - Campus Match Finder: Find peers on campus based on mutual interests.
-    - Monetization: Opportunities for content creators and service providers.
-    
-    Timeline:
-    - Ideation Phase: 1st Jul. 2024
-    - Development Start: 11th Jul. 2024
-    - Launch: 27th Jan. 2025
-
-    Unique Selling Points (USPs):
-    - Tailored for FUTO students.
-    - Combines social and academic tools.
-    - Provides opportunities for monetization.
-    - Integrated marketplace for peer-to-peer trading.
-    """
+        cls.global_content = {
+            "overview": """
+                FUTO Space: A social media platform for students at the Federal University of Technology Owerri (FUTO).
+                Purpose: Provides a digital space for students to interact, share content, explore trending topics, and access university resources.
+            """,
+            "key_features": """
+                - User Dashboard: Personalized view showing posts, friend activity, and notifications.
+                - Posts and Feeds: Share updates, photos, videos, and academic-related content.
+                - Friends: View your friends and recommended students in the community.
+                - Campus Tour Guide: Get directions and explore the FUTO campus.
+                - Marketplace: Buy, sell, and trade items like books, gadgets, and services.
+                - Chat System: Real-time messaging with friends and classmates.
+                - Campus Match Finder: Find peers on campus based on mutual interests.
+                - Monetization: Opportunities for content creators and service providers.
+            """,
+            "timeline": """
+                - Ideation Phase: 1st Jul. 2024
+                - Development Start: 11th Jul. 2024
+                - Launch: 27th Jan. 2025
+            """,
+            "usps": """
+                - Tailored for FUTO students.
+                - Combines social and academic tools.
+                - Provides opportunities for monetization.
+                - Integrated marketplace for peer-to-peer trading.
+            """
+        }
 
 
     def _clear_local_content(self):
