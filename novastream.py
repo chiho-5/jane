@@ -3,7 +3,7 @@ import requests
 from streamlit_chat import message  # For a chat-like UI
 
 # API Base URL
-API_URL = "http://localhost:8000"  # Replace with your deployed API URL
+API_URL = "http://nova-nloe.onrender.com"  # Replace with your deployed API URL
 
 st.set_page_config(page_title="SpaceAI Chat", layout="wide")
 
