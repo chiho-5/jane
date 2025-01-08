@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, UploadFile, Form, Depends
+from fastapi import FastAPI, HTTPException, UploadFile, Form, Depends, Query
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import os
@@ -76,27 +76,20 @@ async def chat_endpoint(request: ChatRequest):
         raise HTTPException(status_code=500, detail=f"Error processing chat: {str(e)}")
 
 
-class ClearRequest(BaseModel):
-    user_id: str
+# class ClearRequest(BaseModel):
+#     user_id: str
 
-@app.get("/local_content/clear", response_model=ClearRequest)
-async def clear_local_content(request: ClearRequest):
+@app.get("/local_content/clear")
+async def clear_local_content(user_id: str = Query(..., description="User ID to clear content")):
     """Clear the global content directory."""
     try:
-        user_id = request.user_id  # Get the user_id from the request
-        data_directory = f"./data/{user_id}"  # Use the user_id to determine the directory
-        
-        # Ensure the directory exists
+        # The user_id is passed as a query parameter
+        data_directory = f"./data/{user_id}"
         os.makedirs(data_directory, exist_ok=True)
-
-        # Initialize SpaceAI with the user-specific directory
-        space_ai = SpaceAI(data_directory=data_directory, user_id=user_id)
-
-        # Call the method to clear the content
-        space_ai._clear_local_content()
-
-        print("Global content cleared successfully.")
+        space_ai = SpaceAI(data_directory=data_directory, query=None, user_id=user_id)
+        space_ai._clear_local_content()  # Clear global content directory
+        logger.info("Global content cleared successfully.")
         return {"detail": "Global content cleared successfully."}
     except Exception as e:
-        print(f"Error clearing local content: {e}")
+        logger.error(f"Error clearing local content: {e}")
         raise HTTPException(status_code=500, detail=f"Error clearing local content: {str(e)}")
