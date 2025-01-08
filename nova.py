@@ -184,7 +184,7 @@ class SpaceAI:
     
     def set_global_content(self):
         """Set globally persistent content."""
-        self.global_content = global_content = {
+        self.global_content = {
             "overview": """
                 FUTO Space: A social media platform for students at the Federal University of Technology Owerri (FUTO).
                 Purpose: Provides a digital space for students to interact, share content, explore trending topics, and access university resources.
