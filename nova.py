@@ -42,6 +42,7 @@ class SpaceAI:
         Settings.llm = self.llm
         # Settings.embed_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
         Settings.embed_model = FastEmbedEmbedding(model_name="BAAI/bge-small-en-v1.5")
+        self.set_global_content()
 
     async def handle_user_message(self):
         """Handle the query based on the context (web, file, global)."""
@@ -95,8 +96,30 @@ class SpaceAI:
             raise
 
 
+    # def _is_global_context_relevant(self):
+    #     """Check if the query relates to the global context."""
+    #     if not self.global_content or not self.query:
+    #         return False
+
+    #     # Normalize both global content and query for case insensitivity and punctuation
+    #     normalized_query = self._normalize_text(self.query)
+
+    #     # Check if query matches any part of the global content
+    #     for section, content in self.global_content.items():
+    #         normalized_content = self._normalize_text(content)
+            
+    #         # Check if normalized query is a substring of normalized content
+    #         if normalized_query in normalized_content:
+    #             return True
+
+    #         # Optional: If you want to check for keyword or phrase matches, add further logic
+    #         # Example: split the query into keywords and check if each exists in the content
+    #         query_keywords = normalized_query.split()
+    #         if all(keyword in normalized_content for keyword in query_keywords):
+    #             return True
+
+    #     return False
     def _is_global_context_relevant(self):
-        self.set_global_content()
         """Check if the query relates to the global context."""
         if not self.global_content or not self.query:
             return False
@@ -104,21 +127,21 @@ class SpaceAI:
         # Normalize both global content and query for case insensitivity and punctuation
         normalized_query = self._normalize_text(self.query)
 
-        # Check if query matches any part of the global content
+        # Check if the query matches any part of the global content
         for section, content in self.global_content.items():
             normalized_content = self._normalize_text(content)
-            
+
             # Check if normalized query is a substring of normalized content
             if normalized_query in normalized_content:
                 return True
 
             # Optional: If you want to check for keyword or phrase matches, add further logic
-            # Example: split the query into keywords and check if each exists in the content
             query_keywords = normalized_query.split()
             if all(keyword in normalized_content for keyword in query_keywords):
                 return True
 
         return False
+
 
     def _normalize_text(self, text):
         """Normalize the text by lowering case and removing punctuation."""
