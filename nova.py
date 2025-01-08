@@ -183,12 +183,17 @@ class SpaceAI:
         for file in os.listdir(self.data_directory):
             file_path = os.path.join(self.data_directory, file)
             try:
-                os.remove(file_path)
+                if os.path.isfile(file_path):
+                    os.remove(file_path)  # Remove files
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)  # Remove directories and their contents
+                print(f"Successfully deleted: {file_path}")
             except Exception as e:
-                print(f"Failed to delete file {file_path}: {e}")
+                print(f"Failed to delete {file_path}: {e}")
 
-        # cls.global_content = None
-        print(f"local content cleared at {datetime.now()}")
+        print(f"Local content cleared at {datetime.now()}")
+
+
 
     def _can_use_web_search(self):
         """Check if the user has remaining web search quota."""

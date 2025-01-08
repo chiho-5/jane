@@ -18,8 +18,6 @@ class ChatRequest(BaseModel):
     query: str
     include_web: bool = False  # Optional, default to False
 
-class ClearRequest(BaseModel):
-    user_id: str
 
 class FileUploadResponse(BaseModel):
     file_path: str
@@ -78,16 +76,27 @@ async def chat_endpoint(request: ChatRequest):
         raise HTTPException(status_code=500, detail=f"Error processing chat: {str(e)}")
 
 
-@app.get("/global_content/clear",response_model=ClearRequest)
-async def clear_local_content( user_id: str = Form(...)):
+class ClearRequest(BaseModel):
+    user_id: str
+
+@app.get("/local_content/clear", response_model=ClearRequest)
+async def clear_local_content(request: ClearRequest):
     """Clear the global content directory."""
     try:
-        data_directory = f"./data/{request.user_id}"
+        user_id = request.user_id  # Get the user_id from the request
+        data_directory = f"./data/{user_id}"  # Use the user_id to determine the directory
+        
+        # Ensure the directory exists
         os.makedirs(data_directory, exist_ok=True)
-        space_ai = SpaceAI(data_directory=data_directory, query=None, user_id="1234D")
-        space_ai._clear_local_content()  # Clear global content directory
-        logger.info("Global content cleared successfully.")
+
+        # Initialize SpaceAI with the user-specific directory
+        space_ai = SpaceAI(data_directory=data_directory, user_id=user_id)
+
+        # Call the method to clear the content
+        space_ai._clear_local_content()
+
+        print("Global content cleared successfully.")
         return {"detail": "Global content cleared successfully."}
     except Exception as e:
-        logger.error(f"Error clearing local content: {e}")
+        print(f"Error clearing local content: {e}")
         raise HTTPException(status_code=500, detail=f"Error clearing local content: {str(e)}")
